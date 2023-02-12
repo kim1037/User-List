@@ -42,12 +42,12 @@
   </nav>
   <!-- 內容專區 -->
   <div class="container">
-    <div class="row" id="search-area">
+    <div class="row" id="search-form">
       <form class="row row-cols-lg-auto g-3 align-items-center">
         <div class="col-12">
           <label class="visually-hidden" for="search-input">keyword</label>
           <div class="input-group">
-            <input type="text" class="form-control" id="search-input" placeholder="Keyword">
+            <input type="text" class="form-control" id="search-input" placeholder="search by region">
           </div>
         </div>
 
@@ -55,9 +55,9 @@
           <label class="visually-hidden" for="gender-select">Gender</label>
           <select class="form-select" id="gender-select">
             <option selected>Gender</option>
-            <option value="1">Male</option>
-            <option value="2">Female</option>
-            <option value="3">All</option>
+            <option value="0">Male</option>
+            <option value="1">Female</option>
+            <option value="2">All</option>
           </select>
         </div>
 
@@ -66,7 +66,7 @@
         </div>
       </form>
     </div>
-    <div class="row d-flex justify-content-around" id="data-panel">
+    <div class="row " id="data-panel">
       <!-- render user list here -->
     </div>
   </div>
