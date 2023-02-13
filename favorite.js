@@ -2,7 +2,7 @@ const BASE_URL = "https://user-list.alphacamp.io";
 const INDEX_URL = BASE_URL + "/api/v1/users/";
 const USERS_PER_PAGE = 10;
 
-let usersList = [];
+let usersList = JSON.parse(localStorage.getItem("favoriteUsers"));
 
 const dataPanel = document.querySelector("#data-panel");
 const searchForm = document.querySelector("#search-form");
@@ -62,55 +62,23 @@ function showUserModal(id) {
   `;
 }
 
-function addToFavorite(id) {
-  const list = JSON.parse(localStorage.getItem('favoriteUsers')) || []
-  const user = usersList.find((user)=> user.id === id)
-  if (list.some((user)=>user.id === id)) {
-    return  alert('This member has already added to favorite list.')
-  }
+function removeFromFavorite(id) {
+  if (!usersList || !usersList.length) return;
 
-  list.push(user)
-  localStorage.setItem('favoriteUsers',JSON.stringify(list))
+  const userIndex = usersList.findIndex((user) => user.id === id);
+  if (userIndex === -1) return;
+
+  usersList.splice(userIndex,1)
+  localStorage.setItem('favoriteUsers',JSON.stringify(usersList))
+  renderUserList(usersList)
 }
 
 dataPanel.addEventListener("click", function onAvatarClciked(event) {
   if (event.target.matches(".user-avatar")) {
     showUserModal(Number(event.target.dataset.id));
   } else if (event.target.matches(".add-to-favorite")) {
-    addToFavorite(Number(event.target.dataset.id));
-    event.target.classList.remove("fa-sharp");
-    event.target.classList.add("fa-solid");
-    event.target.style.color = 'red'
-    console.log(event.target)
+    removeFromFavorite(Number(event.target.dataset.id));
   }
 });
 
-searchForm.addEventListener("submit", function onSearchFormSubmitted(event) {
-  event.preventDefault();
-  const keyword = searchInput.value.trim().toLowerCase();
-  let filteredUsers = [];
-  const gender = Number(genderSelect.value); // 0=male, 1=female, 2=all
-  filteredUsers = usersList.filter((user) =>
-    user.region.toLowerCase().includes(keyword)
-  );
-  if (gender === 0) {
-    filteredUsers = filteredUsers.filter((user) => user.gender === "male");
-  } else if (gender === 1) {
-    filteredUsers = filteredUsers.filter((user) => user.gender === "female");
-  }
-
-  if (filteredUsers.length === 0) {
-    return alert(`Can't find the member from the region: ${keyword}.`);
-  }
-  renderUserList(filteredUsers);
-});
-
-axios
-  .get(INDEX_URL)
-  .then((response) => {
-    usersList.push(...response.data.results);
-    renderUserList(usersList);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+renderUserList(usersList);

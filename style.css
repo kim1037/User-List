@@ -1,3 +1,3 @@
-.user-avatar:hover{
+.user-avatar,.add-to-favorite:hover{
   cursor: pointer;
 }
