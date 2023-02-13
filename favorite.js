@@ -8,6 +8,7 @@ const dataPanel = document.querySelector("#data-panel");
 const searchForm = document.querySelector("#search-form");
 const searchInput = document.querySelector("#search-input");
 const genderSelect = document.querySelector("#gender-select");
+const paginator = document.querySelector("#paginator");
 
 function renderUserList(users) {
   let rawHTML = "";
@@ -28,7 +29,7 @@ function renderUserList(users) {
           <h6 class="text-center">Age : ${user.age}</h6>
           <h6 class="text-center">Region : ${user.region}</h6>
         </div>
-        <i class="fa-sharp fa-regular fa-heart add-to-favorite" data-id="${
+        <i class="fa-solid fa-heart-circle-minus add-to-favorite" data-id="${
           user.id
         }"></i>
       </div>`;
@@ -68,9 +69,25 @@ function removeFromFavorite(id) {
   const userIndex = usersList.findIndex((user) => user.id === id);
   if (userIndex === -1) return;
 
-  usersList.splice(userIndex,1)
-  localStorage.setItem('favoriteUsers',JSON.stringify(usersList))
-  renderUserList(usersList)
+  usersList.splice(userIndex, 1);
+  localStorage.setItem("favoriteUsers", JSON.stringify(usersList));
+  renderUserList(getUsersByPage(1));
+  renderPaginator(usersList.length);
+}
+
+function getUsersByPage(page) {
+  const startIndex = (page - 1) * USERS_PER_PAGE;
+  return usersList.slice(startIndex, startIndex + USERS_PER_PAGE);
+}
+
+
+function renderPaginator(amount) {
+  const numberOfPages = Math.ceil(amount / USERS_PER_PAGE);
+  let rawHTML = ``;
+  for (let page = 1; page <= numberOfPages; page++) {
+    rawHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${page}">${page}</a></li>`;
+  }
+  paginator.innerHTML = rawHTML;
 }
 
 dataPanel.addEventListener("click", function onAvatarClciked(event) {
@@ -81,4 +98,12 @@ dataPanel.addEventListener("click", function onAvatarClciked(event) {
   }
 });
 
-renderUserList(usersList);
+paginator.addEventListener("click", function onPaginatorClicked(event) {
+  if (event.target.tagName !== "A") return;
+
+  const page = Number(event.target.dataset.page);
+  renderUserList(getUsersByPage(page));
+});
+
+renderPaginator(usersList.length)
+renderUserList(getUsersByPage(1));
