@@ -54,7 +54,7 @@ function showUserModal(id) {
   const userModalInfo = document.querySelector("#user-modal-info");
   const userData = usersList.find((user) => user.id === id);
 
-  userModalImage.innerHTML = `<img src="${userData.avatar}" alt="avatar"             style="width:200px; height:200px;">`;
+  userModalImage.innerHTML = `<img src="${userData.avatar}" alt="avatar" style="width:200px; height:200px;">`;
   userModalTItle.innerText = `${userData.name} ${userData.surname}`;
   userModalInfo.innerHTML = `
             <p>Gender : ${userData.gender}</p>
@@ -94,6 +94,7 @@ function turnHeartTosolid(id) {
   if (list.some((user) => user.id === id)) {
     return "fa-solid";
   }
+  return ""; //避免回傳undefined
 }
 
 dataPanel.addEventListener("click", function onAvatarClciked(event) {
